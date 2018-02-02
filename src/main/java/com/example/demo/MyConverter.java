@@ -13,60 +13,67 @@ import java.util.regex.Pattern;
  **/
 @Component
 public class MyConverter {
-    public String convertYear(String year) {
-        if (year.isEmpty() || year == null) {
-            return "Wrong input";
+    public String converter(String input) {
+        if (input.isEmpty() || input == null) {
+            return "Null input";
         }
+        String result = input;
+        Pattern pYear = Pattern.compile("^\\d{4}$");
+        Pattern pQuarter = Pattern.compile("^Q-\\d{4}-[1|2|3|4]$");
+        Pattern pSeason = Pattern.compile("^SWS-\\d{4}-(04|10)$");
+        Pattern pMonth = Pattern.compile("^M-\\d{4}-(0[1-9]|10|11|12$)");
+
+        Matcher mYear = pYear.matcher(result);
+        Matcher mQuater = pQuarter.matcher(result);
+        Matcher mSeason = pSeason.matcher(result);
+        Matcher mMonth = pMonth.matcher(result);
+
+        if (mYear.matches()) {
+            return convertYear(result);
+        } else if (mQuater.matches()) {
+            return convertQuarter(result);
+        } else if (mSeason.matches()) {
+            return convertSeason(result);
+        } else if (mMonth.matches()) {
+            return convertMonth(result);
+        } else {
+            return "Invalid input";
+        }
+    }
+
+    private String convertYear(String year) {
         String result = year;
         return result;
     }
 
-    public String convertQuarter(String quater) {
-        if (quater.isEmpty() || quater == null) {
-            return "Wrong input";
-        }
-        String result = "";
+    private String convertQuarter(String quater) {
         String tmp = quater;
-        Pattern pattern = Pattern.compile("^Q-\\d{4}-[1|2|3|4]$");
-        Matcher matcher = pattern.matcher(tmp);
-        if (matcher.matches()) {
-            String[] parts = tmp.split("-");
-            result = parts[0] + parts[2] + "-" + parts[1].substring(2);
-        }
-        return result;
-    }
-
-    public String convertSeason(String searson) {
-        if (searson.isEmpty() || searson == null) {
-            return "Wrong input";
-        }
         String result = "";
-        String tmp = searson;
-        Pattern pattern = Pattern.compile("^SWS-\\d{4}-(04|10)$");
-        Matcher matcher = pattern.matcher(tmp);
-        if (matcher.matches()) {
-            String[] parts = tmp.split("-");
-            if (parts[2] == "04") {
-                result = "Sum" + parts[1].substring(2);
-            } else {
-                result = "Win" + parts[1].substring(2) + "/" + (Integer.valueOf(parts[1].substring(2)) + 1);
-            }
-        }
+        String[] parts = tmp.split("-");
+        result = parts[0] + parts[2] + "-" + parts[1].substring(2);
         return result;
     }
 
-    public String convertMonth(String month) {
-        if (month.isEmpty() || month == null) {
-            return "Wrong input";
+    private String convertSeason(String searson) {
+        String tmp = searson;
+        String result = "";
+        String[] parts = tmp.split("-");
+        if (parts[2].equals("04")) {
+            System.out.println("YOP");
+            result = "Sum" + "-" + parts[1].substring(2);
+        } else if (parts[2].equals("10")) {
+            result = "Win" + "-" + parts[1].substring(2) + "/" + (Integer.valueOf(parts[1].substring(2)) + 1);
         }
+        System.out.println(result + " from Season.");
+
+        return result;
+    }
+
+    private String convertMonth(String month) {
         String result = "";
         String tmp = month;
-        Pattern pattern = Pattern.compile("^M-\\d{4}-([1-9]|[0-1][1-2])$");
-        Matcher matcher = pattern.matcher(tmp);
-        if (matcher.matches()) {
-            String[] parts = tmp.split("-");
-            result = matchMonthWithNumber(parts[2]) + parts[1];
-        }
+        String[] parts = tmp.split("-");
+        result = matchMonthWithNumber(parts[2]) + "-" + parts[1];
         return result;
     }
 
@@ -81,7 +88,7 @@ public class MyConverter {
             return monthWith3Abbr;
         }
         if (Integer.valueOf(number) == 3) {
-            monthWith3Abbr = "Mat";
+            monthWith3Abbr = "Mar";
             return monthWith3Abbr;
         }
         if (Integer.valueOf(number) == 4) {
