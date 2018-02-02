@@ -16,23 +16,8 @@ public class ConverterController {
     @Autowired
     private MyConverter converter;
 
-    @GetMapping("/year/{inputyear}")
-    public String year(@PathVariable String inputYear) {
-        return converter.convertYear(inputYear);
-    }
-
-    @GetMapping("/quarter/{inputquarter}")
-    public String quar(@PathVariable String inputQuar) {
-        return converter.convertYear(inputQuar);
-    }
-
-    @GetMapping("/season/{inputseason}")
-    public String season(@PathVariable String inputSeason) {
-        return converter.convertYear(inputSeason);
-    }
-
-    @GetMapping("/month/{inputmonth}")
-    public String month(@PathVariable String inputMonth) {
-        return converter.convertYear(inputMonth);
+    @GetMapping("/converter")
+    public String year(@RequestParam(required = true, defaultValue = "") String input) {
+        return converter.converter(input);
     }
 }

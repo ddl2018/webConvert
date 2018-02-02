@@ -13,7 +13,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ConverterController.class, secure = false)
@@ -29,40 +36,32 @@ public class ConverterControllerTest {
     @Test
     public void convertYear() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                "/year?inputyear=2018");
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        System.out.println(result.getResponse());
+                "/converter?input=2018");
+        RequestBuilder requestBuilder1 = MockMvcRequestBuilders.get(
+                "/converter?input=SWS-2018-04");
+//        RequestBuilder requestBuilder2 = MockMvcRequestBuilders.get(
+//                "/converter?input=SWS-2018-10");
+//        RequestBuilder requestBuilder3 = MockMvcRequestBuilders.get(
+//                "/converter?input=Q-2018-2");
+//        RequestBuilder requestBuilder4 = MockMvcRequestBuilders.get(
+//                "/converter?input=M-2018-03");
         String expected = "2018";
-        assertThat(expected.equals(result));
-    }
-
-    @Test
-    public void convertQuarter() throws Exception {
-    	RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                "/quarter?inputquarter=Q-2017-4");
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        System.out.println(result.getResponse());
-        String expected = "Q4-17";
-        assertThat(expected.equals(result));
-    }
-
-    @Test
-    public void convertSeason() throws Exception{
-    	RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                "/season?inputyear=SWS-2018-04");
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        System.out.println(result.getResponse());
-        String expected = "Sum-18";
-        assertThat(expected.equals(result));
-    }
-
-    @Test
-    public void convertMonth() throws Exception{
-    	RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                "/month?inputmonth=M-2018-01");
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        System.out.println(result.getResponse());
-        String expected = "Jan-2018";
-        assertThat(expected.equals(result));
+        String expected1 = "Sum-18";
+        String expected2 = "Win-18/19";
+        String expected3 = "Q2-18";
+        String expected4 = "Mar-2018";
+        boolean result = mockMvc.perform(requestBuilder).andReturn().getResponse().getContentAsString().equals(expected);
+        System.out.println(mockMvc.perform(requestBuilder).andReturn().getResponse().getContentAsString() + "MINMIN");
+//        MvcResult result = (MvcResult) mockMvc.perform(requestBuilder1).andExpect(status().isOk())
+//                .andExpect(content().string(expected1));
+//        System.out.println(result + " MINMIN");
+//        result = mockMvc.perform(requestBuilder2).andReturn();
+//        assertTrue(expected2.equals(result.getRequest().getParameter("input")));
+//
+//        result = mockMvc.perform(requestBuilder3).andReturn();
+//        assertTrue(expected3.equals(result.getRequest().getParameter("input")));
+//
+//        result = mockMvc.perform(requestBuilder4).andReturn();
+//        assertTrue(expected4.equals(result.getRequest().getParameter("input")));
     }
 }

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 
 public class MyConverterTest extends AbstractStandardSoftAssertions {
     MyConverter testObj = new MyConverter();
-    
+
     @Test
     public void testMyconverter() {
         assertThat(testObj.getClass().getName().equals("MyConverter"));

@@ -59,13 +59,10 @@ public class MyConverter {
         String result = "";
         String[] parts = tmp.split("-");
         if (parts[2].equals("04")) {
-            System.out.println("YOP");
             result = "Sum" + "-" + parts[1].substring(2);
         } else if (parts[2].equals("10")) {
             result = "Win" + "-" + parts[1].substring(2) + "/" + (Integer.valueOf(parts[1].substring(2)) + 1);
         }
-        System.out.println(result + " from Season.");
-
         return result;
     }
 
